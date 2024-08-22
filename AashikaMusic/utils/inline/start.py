@@ -34,7 +34,7 @@ def private_panel(_):
         ],
         [
             InlineKeyboardButton(text=_["S_B_6"], url=config.SUPPORT_CHANNEL),
-            InlineKeyboardButton(text=_["S_B_7"], callback_data="REPO"),  # Use callback data instead of url
+            InlineKeyboardButton(text=_["S_B_7"], callback_data="send_video"),  # Use callback data instead of url
         ],
     ]
     return buttons
@@ -52,7 +52,7 @@ async def send_video_callback(client: Client, callback_query: CallbackQuery):
     await client.send_video(
         chat_id=callback_query.message.chat.id,
         video=VIDEO_LINK,  # Replace this with the actual video link
-        caption="Here is the video you requested!"  # Optional: Add a caption to the video
+        caption="Here is the Source Code "  # Optional: Add a caption to the video
     )
 
 # Example usage of start_panel and private_panel
