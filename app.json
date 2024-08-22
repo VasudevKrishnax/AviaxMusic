@@ -1,10 +1,10 @@
 {
 
-    "name": "Aviax Music",
+    "name": "Aashika Music",
 
     "description": "A Telegram Music Player Bot, written in Python with Pyrogram and Py-Tgcalls.",
 
-    "logo": "https://telegra.ph/Aviax-02-24",
+    "logo": "https://telegra.ph/Aashika-02-24",
 
     "keywords": [
 
@@ -14,7 +14,7 @@
 
     "bot",
 
-    "Aviax",
+    "Aashika",
 
     "MusicBot",
 
