@@ -48,14 +48,10 @@ async def send_video_callback(client: Client, callback_query: CallbackQuery):
     # Answer the callback query to stop the loading circle
     await callback_query.answer()
 
-    # Edit the message to indicate that the video is being sent
-    await callback_query.message.edit_text("**Love You**")
-
-    # Send the video to the user
+    # Send the video to the user who pressed the button
     await client.send_video(
         chat_id=callback_query.message.chat.id,
         video=VIDEO_LINK,  # Replace this with the actual video link
         caption="Love From @AryavartX"  # Optional: Add a caption to the video
     )
-
 
