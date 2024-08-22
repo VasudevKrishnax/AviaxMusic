@@ -48,15 +48,14 @@ async def send_video_callback(client: Client, callback_query: CallbackQuery):
     # Answer the callback query to stop the loading circle
     await callback_query.answer()
 
-    # Send the video to the user who pressed the button
+    # Edit the message to indicate that the video is being sent
+    await callback_query.message.edit_text("**Love You**")
+
+    # Send the video to the user
     await client.send_video(
         chat_id=callback_query.message.chat.id,
         video=VIDEO_LINK,  # Replace this with the actual video link
-        caption="Here is the Source Code "  # Optional: Add a caption to the video
+        caption="Love From @AryavartX"  # Optional: Add a caption to the video
     )
 
-# Example usage of start_panel and private_panel
-#@app.on_message(filters.command("start"))
-#async def start_command(client: Client, message):
-    # Send the start panel buttons to the user
-  ## await message.reply_text("Welcome! Here are some helpful buttons.", reply_markup=InlineKeyboardMarkup(buttons))
+
