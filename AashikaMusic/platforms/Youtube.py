@@ -6,7 +6,7 @@ from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
 from AashikaMusic.utils.formatters import time_to_seconds
 
-FASTAPI_URL = 'http://68.183.96.153:8000'
+FASTAPI_URL = 'http://157.230.5.237:8000/'
 
 async def fetch_from_api(endpoint: str, data: dict = None) -> dict:
     async with aiohttp.ClientSession() as session:
@@ -18,7 +18,7 @@ class YouTubeAPI:
         self.base = "https://www.youtube.com/watch?v="
         self.regex = r"(?:youtube\.com|youtu\.be)"
         self.status = "https://www.youtube.com/oembed?url="
-        self.listbase = "https://youtube.com/playlist?list="
+        self.tbase = "https://youtube.com/playlist?list="
         self.reg = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
 
     async def exists(self, link: str, videoid: Union[bool, str] = None):
