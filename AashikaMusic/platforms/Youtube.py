@@ -1,10 +1,10 @@
 import asyncio
-import os
 import re
 from typing import Union
 import aiohttp
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
+from AashikaMusic.utils.formatters import time_to_seconds
 
 FASTAPI_URL = 'http://68.183.96.153:8000'
 
@@ -13,22 +13,7 @@ async def fetch_from_api(endpoint: str, data: dict = None) -> dict:
         async with session.post(f'{FASTAPI_URL}/{endpoint}', json=data) as response:
             return await response.json()
 
-async def shell_cmd(cmd):
-    proc = await asyncio.create_subprocess_shell(
-        cmd,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    out, errorz = await proc.communicate()
-    if errorz:
-        if "unavailable videos are hidden" in (errorz.decode("utf-8")).lower():
-            return out.decode("utf-8")
-        else:
-            return errorz.decode("utf-8")
-    return out.decode("utf-8")
-
-
-class MusicAPI:
+class YouTubeAPI:
     def __init__(self):
         self.base = "https://www.youtube.com/watch?v="
         self.regex = r"(?:youtube\.com|youtu\.be)"
