@@ -5,7 +5,7 @@ from io import BytesIO
 from telethon import events
 from telethon.tl.functions.messages import GetHistoryRequest
 from dotenv import load_dotenv
-from AashikaMusic.bot import client  # Ensure this import matches your project structure
+from AashikaMusic.core.bot import client  # Updated import based on your directory structure
 
 # Load environment variables from .env file
 load_dotenv()
