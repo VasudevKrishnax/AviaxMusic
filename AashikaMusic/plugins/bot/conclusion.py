@@ -4,9 +4,8 @@ import os
 from io import BytesIO
 from telethon import events
 from telethon.tl.functions.messages import GetHistoryRequest
-from telethon.tl.types import PeerChannel
 from dotenv import load_dotenv
-from AashikaMusic import bot  # Adjust this import to match your actual project structure
+from AashikaMusic.bot import client  # Ensure this import matches your project structure
 
 # Load environment variables from .env file
 load_dotenv()
@@ -17,9 +16,6 @@ API_HASH = os.getenv('API_HASH')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-# Initialize the Telethon client
-client = bot.client  # Access the bot client from AashikaMusic
-
 async def get_gpt_answer(question):
     url = "https://api.openai.com/v1/chat/completions"
     headers = {
@@ -27,12 +23,12 @@ async def get_gpt_answer(question):
         "Content-Type": "application/json"
     }
     data = {
-        "model": "gpt-4o-mini",
+        "model": "gpt-3.5-turbo",
         "messages": [
             {"role": "system", "content": "You specialize in drawing conclusions in detail. Please respond to the query in a friendly tone in Hindi (Hinglish) language. Explain the conversation, and explain what each person talked about and the overall conclusion. If someone was wrong, point out whose argument was less effective and whose was more insightful. Also, rate their conversation style out of 10 using ⭐️ emoji at the end. Format will be (user): 5/10 ⭐️. 2nd user: 8/10 ⭐️."},
             {"role": "user", "content": question}
         ],
-        "max_tokens": 4095,
+        "max_tokens": 1000,
         "temperature": 0.7
     }
 
@@ -53,7 +49,7 @@ async def conclusion_handler(event):
             await event.reply(f"<b></b>\n <i>{response}</i>", parse_mode="html")
         else:
             with BytesIO(response.encode()) as file:
-                file.name = "aashikamusicbotresponse.txt"
+                file.name = "gpt_response.txt"
                 await client.send_file(
                     event.chat_id, file, caption=f"{messages[:1020]}", reply_to=event.message.id
                 )
