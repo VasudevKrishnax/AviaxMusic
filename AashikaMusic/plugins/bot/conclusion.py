@@ -27,12 +27,12 @@ async def get_gpt_answer(question):
         "Content-Type": "application/json"
     }
     data = {
-        "model": "gpt-3.5-turbo",
+        "model": "gpt-4o-mini",
         "messages": [
             {"role": "system", "content": "You specialize in drawing conclusions in detail. Please respond to the query in a friendly tone in Hindi (Hinglish) language. Explain the conversation, and explain what each person talked about and the overall conclusion. If someone was wrong, point out whose argument was less effective and whose was more insightful. Also, rate their conversation style out of 10 using ⭐️ emoji at the end. Format will be (user): 5/10 ⭐️. 2nd user: 8/10 ⭐️."},
             {"role": "user", "content": question}
         ],
-        "max_tokens": 1000,
+        "max_tokens": 4095,
         "temperature": 0.7
     }
 
@@ -53,7 +53,7 @@ async def conclusion_handler(event):
             await event.reply(f"<b></b>\n <i>{response}</i>", parse_mode="html")
         else:
             with BytesIO(response.encode()) as file:
-                file.name = "gpt_response.txt"
+                file.name = "aashikamusicbotresponse.txt"
                 await client.send_file(
                     event.chat_id, file, caption=f"{messages[:1020]}", reply_to=event.message.id
                 )
