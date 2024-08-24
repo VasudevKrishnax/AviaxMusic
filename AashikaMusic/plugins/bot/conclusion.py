@@ -2,10 +2,10 @@ import requests
 import json
 import os
 from io import BytesIO
-from telethon import events
-from telethon.tl.functions.messages import GetHistoryRequest
+from pyrogram import Client, filters
+from pyrogram.types import Message
 from dotenv import load_dotenv
-from AashikaMusic.core.bot import client  # Updated import based on your directory structure
+from AashikaMusic.core.bot import Aashika
 
 # Load environment variables from .env file
 load_dotenv()
@@ -15,6 +15,9 @@ API_ID = os.getenv('API_ID')
 API_HASH = os.getenv('API_HASH')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
+# Initialize the bot client
+bot = Aashika()
 
 async def get_gpt_answer(question):
     url = "https://api.openai.com/v1/chat/completions"
@@ -36,48 +39,39 @@ async def get_gpt_answer(question):
     content_json = response.json()
     return content_json["choices"][0]["message"]["content"]
 
-@client.on(events.NewMessage(pattern='/conclusion'))
-async def conclusion_handler(event):
-    messages = await get_recent_messages(event)
+@bot.on_message(filters.command('conclusion'))
+async def conclusion_handler(client: Client, message: Message):
+    messages = await get_recent_messages(message)
     if not messages:
-        return await event.reply("Not enough messages found in the group.")
-    
-    await event.reply("Processing...", parse_mode="html")
+        await message.reply("Not enough messages found in the group.")
+        return
+     
+    await message.reply("Processing...", parse_mode="html")
     try:
         response = await get_gpt_answer(messages)
         if len(response) < 4095:
-            await event.reply(f"<b></b>\n <i>{response}</i>", parse_mode="html")
+            await message.reply(f"<b></b>\n <i>{response}</i>", parse_mode="html")
         else:
             with BytesIO(response.encode()) as file:
                 file.name = "gpt_response.txt"
-                await client.send_file(
-                    event.chat_id, file, caption=f"{messages[:1020]}", reply_to=event.message.id
+                await message.reply_document(
+                    file, caption=f"{messages[:1020]}", reply_to_message_id=message.message_id
                 )
     except Exception as exc:
-        await event.reply(f"Error: \n> {exc}")
+        await message.reply(f"Error: \n> {exc}")
 
-async def get_recent_messages(event, num_messages=5):
+async def get_recent_messages(message: Message, num_messages=5):
     try:
-        history = await client(GetHistoryRequest(
-            peer=event.chat_id,
-            offset_id=0,
-            offset_date=None,
-            add_offset=0,
-            limit=num_messages + 1,
-            max_id=0,
-            min_id=0,
-            hash=0
-        ))
+        chat_id = message.chat.id
+        history = await bot.get_chat_history(chat_id, limit=num_messages + 1)
 
-        if history.messages and len(history.messages) > 1:
+        if len(history) > 1:
             messages = []
-            for msg in history.messages[1:]:
-                sender = await client.get_entity(msg.from_id) if msg.from_id else None
-                sender_name = sender.first_name if sender else "Unknown"
-                messages.append(f"{sender_name}: {msg.message}")
-            return "\n".join(reversed(messages))
+            for msg in reversed(history[1:]):  # Skip the most recent message
+                sender_name = (await bot.get_users(msg.from_user.id)).first_name if msg.from_user else "Unknown"
+                messages.append(f"{sender_name}: {msg.text}")
+            return "\n".join(messages)
         else:
             return None
-            
     except Exception as exc:
         return None
