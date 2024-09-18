@@ -30,12 +30,12 @@ class Aashika(Client):
 
         try:
             await self.send_message(
-                chat_id=config.LOG_GROUP_ID,
-                text=f"<u><b>» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ :</b><u>\n\nɪᴅ : <code>{self.id}</code>\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}",
+                chat_id="LoggerCHenciencienciencieni",  # Use the username string here
+                text=f"<u><b>» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ :</b></u>\n\nɪᴅ : <code>{self.id}</code>\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}",
             )
-        except (errors.ChannelInvalid, errors.PeerIdInvalid):
+        except (errors.ChannelInvalid, errors.PeerIdInvalid, errors.UsernameInvalid):
             LOGGER(__name__).error(
-                "Bot has failed to access the log group/channel. Make sure that you have added your bot to your log group/channel."
+                "Bot has failed to access the log group/channel. Make sure that you have added your bot to your log group/channel and that the username is correct."
             )
             exit()
         except Exception as ex:
@@ -44,7 +44,7 @@ class Aashika(Client):
             )
             exit()
 
-        a = await self.get_chat_member(config.LOG_GROUP_ID, self.id)
+        a = await self.get_chat_member("LoggerCHenciencienciencieni", self.id)
         if a.status != ChatMemberStatus.ADMINISTRATOR:
             LOGGER(__name__).error(
                 "Please promote your bot as an admin in your log group/channel."
@@ -54,3 +54,7 @@ class Aashika(Client):
 
     async def stop(self):
         await super().stop()
+
+
+# Set the logger group username as the string
+config.LOG_GROUP_ID = "LoggerCHenciencienciencieni"
